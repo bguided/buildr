@@ -147,6 +147,19 @@ module Buildr
         end
       end
 
+      def external_sources=(var)
+        @external_sources = arrayfy(var)
+      end
+
+      def external_sources(*values)
+        if values.size > 0
+          @external_sources ||= []
+          @external_sources += values
+        else
+          @external_sources || (@project.parent ? @project.parent.eclipse.external_sources : [])
+        end
+      end
+
       private
 
       def arrayfy(obj)
