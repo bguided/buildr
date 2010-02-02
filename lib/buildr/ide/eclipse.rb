@@ -283,6 +283,17 @@ module Buildr
                     }
                   end
                 end
+                unless project.eclipse.external_sources.empty?
+                  xml.linkedResources do
+                    project.eclipse.external_sources.each { |external_source|
+                      xml.link do
+                        xml.name external_source.split(":").last.concat("_src")
+                        xml.type '2'
+                        xml.location external_source._(:src)
+                      end
+                    }                 
+                  end
+                end
               end
             end
           end
@@ -374,7 +385,7 @@ module Buildr
 
       def src_from_absolute_paths absolute_paths, output=nil
         relative_paths = absolute_paths.map { |src| relative(src) }
-        relative_paths.sort.uniq.each do |path|
+        relative_paths.sort.uniq.each do |path|buildr
           unless @paths_written.include?(path)
             attributes = { :kind=>'src', :path=>path, :excluding=>@excludes }
             attributes[:output] = relative(output) if output
